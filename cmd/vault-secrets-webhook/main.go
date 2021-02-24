@@ -42,7 +42,7 @@ import (
 	kubernetesConfig "sigs.k8s.io/controller-runtime/pkg/client/config"
 
 	"github.com/banzaicloud/bank-vaults/cmd/vault-secrets-webhook/registry"
-	"github.com/banzaicloud/bank-vaults/pkg/sdk/vault"
+	"github.com/connorlwilkes/bank-vaults/pkg/sdk/vault"
 )
 
 // VaultConfig represents vault options

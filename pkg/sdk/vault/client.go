@@ -15,7 +15,6 @@
 package vault
 
 import (
-	"context"
 	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
@@ -26,12 +25,11 @@ import (
 	"sync"
 	"time"
 
+	"cloud.google.com/go/compute/metadata"
 	"emperror.dev/errors"
 	"github.com/fsnotify/fsnotify"
 	"github.com/hashicorp/vault/api"
 	vaultapi "github.com/hashicorp/vault/api"
-	"golang.org/x/oauth2/google"
-	"google.golang.org/api/iam/v1"
 	"k8s.io/client-go/rest"
 )
 
@@ -373,16 +371,12 @@ func NewClientFromRawClient(rawClient *vaultapi.Client, opts ...ClientOption) (*
 
 			case GCPGCEAuthMethod:
 				loginDataFunc = func() (map[string]interface{}, error) {
-					tokenSource, err := google.DefaultTokenSource(context.TODO(), iam.CloudPlatformScope)
+					c := metadata.NewClient(nil)
+					queryString := fmt.Sprintf("instance/service-accounts/default/identity?audience=%s/%s", o.url, o.role)
+					jwt, err := c.Get(queryString)
 					if err != nil {
 						return nil, err
 					}
-
-					jwt, err := tokenSource.Token()
-					if err != nil {
-						return nil, err
-					}
-
 					return map[string]interface{}{
 						"jwt":  jwt,
 						"role": o.role,

@@ -3,6 +3,7 @@ module github.com/banzaicloud/bank-vaults/pkg/sdk
 go 1.14
 
 require (
+	cloud.google.com/go v0.78.0
 	emperror.dev/errors v0.8.0
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/hashicorp/vault/api v1.0.4
